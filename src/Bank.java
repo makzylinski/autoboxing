@@ -21,28 +21,40 @@ public class Bank {
         return null;
     }
 
-    public void addCustomer(String name, ArrayList<Double> transaction) {
-        for(int i = 0; i <= customers.size() - 1; i++) {
-            if(!customers.get(i).name().equals(name)) {
-                Customer customer = new Customer(name, transaction);
-                customers.add(customer);
-                System.out.println("New Customer added: " + customer);
-            }
+    public void addCustomer(String customerName, double transaction) {
+        if(getCustomer(customerName) == null) {
+            Customer customer = new Customer(customerName, transaction);
+            customers.add(customer);
+            System.out.println("New Customer added " + customer);
         }
     }
-//
-//    public void addTransaction(String name, ArrayList<Double> transaction) {
-//        for(int i = 0; i <= customers.size() - 1; i++) {
-//            if(customers.get(i).getName().equals(name)) {
-//                customers.get(i).setTransactions(transaction);
-//            }
-//        }
-//    }
-//
-//    public void printStatement() {
-//        for (int i = 0; i <= customers.size() - 1; i++) {
-//            System.out.println("Statement for user " + customers.get(i).getName() +
-//                    ", transactions " + customers.get(i));
-//        }
-//    }
+
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "name='" + name + '\'' +
+                ", customers=" + customers +
+                '}';
+    }
+
+
+    public void addTransaction(String name, double transaction) {
+        Customer customer = getCustomer(name);
+        if(customer != null) {
+            customer.transactions().add(transaction);
+        }
+    }
+
+    public void printStatement(String customerName) {
+        Customer customer = getCustomer(customerName);
+        if(customer == null) {
+            return;
+        }
+
+        System.out.println("Customer's name " + customer.name());
+        System.out.println("Transactions:");
+        for (double d : customer.transactions()) {
+            System.out.printf("$%10.2f (%s)%n", d, d < 0 ? "debit" : "credit");
+        }
+    }
 }
